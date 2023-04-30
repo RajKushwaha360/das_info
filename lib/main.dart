@@ -1,6 +1,8 @@
 import 'package:das_info/screens/authentication/login_page.dart';
-import 'package:das_info/screens/home/home_page.dart';
+import 'package:das_info/screens/home/bottom_navigation/home_page.dart';
+import 'package:das_info/screens/home/entry_point.dart';
 import 'package:das_info/screens/introduction/introduction_screen.dart';
+import 'package:das_info/screens/introduction/splash_screen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +18,6 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
     androidProvider: AndroidProvider.debug,
-    
   );
   await GetStorage.init();
   await getData();
@@ -41,15 +42,37 @@ Future<void> getData() async {
 }
 
 getMaterialPage() {
+  // return IntroductionScreen();
   if (isFirstTime) {
-    return IntroductionScreen();
+    return SplashScreen();
   } else {
     if (isLogin) {
-      return const HomePage();
+      return EntryPoint();
     } else {
       return LogIn();
     }
   }
+}
+
+MaterialColor getMaterialColor(Color color) {
+  final int red = color.red;
+  final int green = color.green;
+  final int blue = color.blue;
+
+  final Map<int, Color> shades = {
+    50: Color.fromRGBO(red, green, blue, .1),
+    100: Color.fromRGBO(red, green, blue, .2),
+    200: Color.fromRGBO(red, green, blue, .3),
+    300: Color.fromRGBO(red, green, blue, .4),
+    400: Color.fromRGBO(red, green, blue, .5),
+    500: Color.fromRGBO(red, green, blue, .6),
+    600: Color.fromRGBO(red, green, blue, .7),
+    700: Color.fromRGBO(red, green, blue, .8),
+    800: Color.fromRGBO(red, green, blue, .9),
+    900: Color.fromRGBO(red, green, blue, 1),
+  };
+
+  return MaterialColor(color.value, shades);
 }
 
 class MyApp extends StatelessWidget {
@@ -63,6 +86,9 @@ class MyApp extends StatelessWidget {
       // theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       // darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       debugShowCheckedModeBanner: false,
+      // theme: ThemeData(
+      //   primarySwatch: getMaterialColor(Color(9xf)),
+      // ),
       home: getMaterialPage(),
     );
   }

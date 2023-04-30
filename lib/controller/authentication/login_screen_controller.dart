@@ -1,12 +1,15 @@
 import 'dart:async';
 
-import 'package:das_info/screens/home/home_page.dart';
+import 'package:das_info/screens/authentication/sign_up_page.dart';
+import 'package:das_info/screens/home/bottom_navigation/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+
+import '../../screens/home/entry_point.dart';
 
 class LoginController extends GetxController {
   var isLoading = false.obs;
@@ -24,7 +27,6 @@ class LoginController extends GetxController {
   late final Timer _timer;
   var isCodeResent = false.obs;
   final data = GetStorage();
-  var isRegistered = false.obs;
 
   void sendOtp() async {
     isLoading.value = true;
@@ -33,12 +35,24 @@ class LoginController extends GetxController {
       isLoading.value = false;
       return;
     }
+    if (!await checkUserRegistered()) {
+      // Get.offAll(() => SignUpPage());
+      Get.snackbar(
+        'Not Registered',
+        'You are not registered. Please register first',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      isLoading.value = false;
+      return;
+    }
+
     mobileNumber = numberController.text;
     await _auth.verifyPhoneNumber(
       phoneNumber: "+91$mobileNumber",
       verificationCompleted: (PhoneAuthCredential credential) {},
       verificationFailed: (FirebaseAuthException e) {
         isLoading.value = false;
+        print(e.toString());
         Get.snackbar(
             "Verification failed", "Please recheck your mobile number.",
             snackPosition: SnackPosition.BOTTOM);
@@ -63,14 +77,14 @@ class LoginController extends GetxController {
     );
   }
 
-  Future<void> checkUserRegistered() async {
+  Future<bool> checkUserRegistered() async {
     final currentUser = _auth.currentUser;
     final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child("students/${currentUser?.uid}").get();
+    final snapshot = await ref.child("users/${numberController.text}").get();
     if (snapshot.exists) {
-      isRegistered.value = true;
+      return true;
     } else {
-      isRegistered.value = false;
+      return false;
     }
   }
 
@@ -115,12 +129,14 @@ class LoginController extends GetxController {
       );
       return;
     }
-    await checkUserRegistered();
-    if (isRegistered.value) {
-      loadUserData();
-    } else {
-      registerUser();
-    }
+    Get.offAll(EntryPoint());
+
+    // await checkUserRegistered();
+    // if (isRegistered.value) {
+    //   loadUserData();
+    // } else {
+    //   registerUser();
+    // }
   }
 
   void registerUser() async {
@@ -133,7 +149,7 @@ class LoginController extends GetxController {
       "studentDetails": {}
     }).then((value) {
       isLoading.value = false;
-      Get.offAll(const HomePage());
+      Get.offAll(EntryPoint());
     }).catchError((error) {
       isLoading.value = false;
       Get.snackbar(
@@ -155,7 +171,7 @@ class LoginController extends GetxController {
     final snapshot = await ref.child("students/${currentUser?.uid}").get();
     if (snapshot.exists) {
       isLoading.value = false;
-      Get.offAll(const HomePage());
+      Get.offAll(EntryPoint());
     } else {
       isLoading.value = false;
       Get.snackbar(

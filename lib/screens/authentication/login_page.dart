@@ -1,3 +1,4 @@
+import 'package:das_info/screens/authentication/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,18 +15,9 @@ class LogIn extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 20),
-          color: Theme.of(context).primaryColor,
-          child: Container(
-            height: MediaQuery.of(context).size.height - 200,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(100),
-                bottomRight: Radius.circular(100),
-              ),
-            ),
+          child: Center(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
@@ -79,8 +71,7 @@ class LogIn extends StatelessWidget {
                                             return null;
                                           },
                                           keyboardType: TextInputType.number,
-                                          controller:
-                                              loginController.otpController,
+                                          controller: loginController.otpController,
                                           decoration: const InputDecoration(
                                             border: OutlineInputBorder(),
                                             labelText: "Enter OTP",
@@ -96,8 +87,7 @@ class LogIn extends StatelessWidget {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                loginController
-                                                        .isResendActive.value
+                                                loginController.isResendActive.value
                                                     ? ""
                                                     : "After ${loginController.start} sec\nyou can resend code.",
                                                 textAlign: TextAlign.center,
@@ -106,10 +96,8 @@ class LogIn extends StatelessWidget {
                                                 onPressed: loginController
                                                         .isResendActive.value
                                                     ? () {
-                                                        loginController
-                                                            .resendOtp();
-                                                        loginController
-                                                            .isCodeResent
+                                                        loginController.resendOtp();
+                                                        loginController.isCodeResent
                                                             .value = true;
                                                       }
                                                     : null,
@@ -149,8 +137,7 @@ class LogIn extends StatelessWidget {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      controller:
-                                          loginController.numberController,
+                                      controller: loginController.numberController,
                                       decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         labelText: "Enter mobile no.",
@@ -175,6 +162,12 @@ class LogIn extends StatelessWidget {
                 ),
                 const SizedBox(
                   height: 100,
+                ),
+                TextButton(
+                  child: Text('New user? Click here to Register',),
+                  onPressed: () {
+                    Get.offAll(() => SignUpPage());
+                  },
                 ),
               ],
             ),
