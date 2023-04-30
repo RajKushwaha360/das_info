@@ -44,7 +44,10 @@ class _EntryPointState extends State<EntryPoint> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.face),
+        leading: Image.asset(
+          'assets/images/logo.png',
+          scale: 4,
+        ),
         title: const Text('Home'),
         backgroundColor: const Color(0xFFC4C4C4),
         actions: [

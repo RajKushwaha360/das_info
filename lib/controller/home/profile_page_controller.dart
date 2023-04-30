@@ -21,7 +21,7 @@ class ProfilePageController extends GetxController {
     // final currentUser = _auth.currentUser!;
     // final mobileNumber = currentUser.phoneNumber!.substring(3);
     final phoneNumber = _auth.currentUser!.phoneNumber!.substring(3);
-    final snapshot = await ref.child('users/7265809318').get();
+    final snapshot = await ref.child('users/$phoneNumber').get();
 
     name.value = snapshot.child('name').value.toString();
     designation.value = snapshot.child('designation').value.toString();

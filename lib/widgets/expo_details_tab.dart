@@ -5,7 +5,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 class ExpoDetailsTab extends StatelessWidget {
   const ExpoDetailsTab({Key? key}) : super(key: key);
   
-
   @override
   Widget build(BuildContext context) {
     return Container(
